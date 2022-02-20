@@ -82,13 +82,15 @@ namespace MyJobsApp.Services.Impl
             await megaClient.LogoutAsync();
         }
 
-        public async Task SendSingleMail(EmailMessageViewModel dto)
+        public async Task<bool> SendSingleMail(EmailMessageViewModel dto)
         {
             var client = new SendGridClient(_configuration["SendGrid:AccessToken"]);
             var from = new EmailAddress(_configuration["SendGrid:From"], _configuration["SendGrid:Name"]);
             var to = new EmailAddress(dto.SendTos.FirstOrDefault(), "");
             var msg = MailHelper.CreateSingleEmail(from, to, dto.Subject, "", dto.Content);
             var response = await client.SendEmailAsync(msg);
+            
+            return response.IsSuccessStatusCode;
         }
     }
 }

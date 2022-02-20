@@ -14,6 +14,6 @@
         public static string PhoneNumber = "0399059205";
         public static string EmailAddress = "huynx11.dev@gmail.com";
         public static string Website = "https://devswim.com";
-        public static string Signature = "Devswim.com";
+        public static string Signature = "Devswim";
     }
 }

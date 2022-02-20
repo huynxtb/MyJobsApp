@@ -10,6 +10,6 @@ namespace MyJobsApp.Services
         Task<string> UploadFileToMega(byte[] fileBytes, string fileName, string megaFolderName);
         Task<FileStreamResult> DownloadFileFromMega(string url, string contentType);
         Task DeleteFileFromMega(string url);
-        Task SendSingleMail(EmailMessageViewModel dto);
+        Task<bool> SendSingleMail(EmailMessageViewModel dto);
     }
 }

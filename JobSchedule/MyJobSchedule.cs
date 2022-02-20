@@ -81,7 +81,7 @@ namespace MyJobsApp.JobSchedule
             var header = Path.Combine(contentRootPath, "EmailTemplate/CustomerServerInvoiceHeader.html");
             var body = Path.Combine(contentRootPath, "EmailTemplate/CustomerServerInvoiceBody.html");
             var cul = CultureInfo.GetCultureInfo("vi-VN"); // try with "en-US"
-            var subject = "REMIND-THANH TOÁN SERVER WEBSITE";
+            var subject = "NHẮC NHỞ-THANH TOÁN SERVER WEBSITE";
 
             foreach (var cus in listCus)
             {
@@ -91,7 +91,7 @@ namespace MyJobsApp.JobSchedule
                         body,
                         cus.CustomerName.ToUpper(), //0
                         cus.Website, //1
-                        cus.Website, //2
+                        cus.Website.Replace("https://www.", string.Empty), //2
                         OwnerInfo.EmailAddress, //3
                         OwnerInfo.EmailAddress, //4
                         $"{cus.ExpirationDate}/{DateTime.Now.Month}/{DateTime.Now.Year}", //5
@@ -99,7 +99,7 @@ namespace MyJobsApp.JobSchedule
                         OwnerInfo.Bank, //7
                         OwnerInfo.BankNumber, //8
                         cus.PaymentAmount.ToString("#,###", cul.NumberFormat), //9
-                        cus.Website, //10
+                        cus.Website.Replace("https://www.", string.Empty), //10
                         cus.VpsLocation, //11
                         cus.VpsIPAddress, //12
                         cus.VpsCPU, //13
@@ -112,8 +112,8 @@ namespace MyJobsApp.JobSchedule
                         OwnerInfo.PhoneNumber, //20
                         DateTime.Now.Year, //21
                         OwnerInfo.Website, //22
-                        OwnerInfo.Website, //23
-                        cus.Website, //24
+                        OwnerInfo.Website.Replace("https://www.", string.Empty), //23
+                        cus.Website.Replace("https://www.", string.Empty), //24
                         "https://www.hawkhost.com/", //25
                         "HawkHost", //26
                         OwnerInfo.BankOwnerName); //27

@@ -37,7 +37,7 @@ namespace MyJobsApp.Controllers
             {
                 await _myJobSchedule.SendMailPaymentServer20ThOfEveryMonth();
 
-                return SuccessResponses("mail/monthly-payment-web-server");
+                return SuccessResponses("send-mail/monthly-payment-web-server");
             }
             catch (Exception e)
             {
