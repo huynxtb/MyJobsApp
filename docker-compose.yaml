@@ -1,0 +1,9 @@
+﻿version: "3.8"
+
+services:
+  devswim:
+    container_name: app-jobs
+    restart: always
+    image: huynx11/app-jobs:latest
+    ports:
+      - "5003:80" 

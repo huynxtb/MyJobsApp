@@ -1,0 +1,129 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.0.1
+  slack: circleci/slack@4.6.1
+
+jobs:
+  build-and-push:
+    environment:
+      DOCKER_IMAGE: huynx11/app-jobs # DockerImage
+      DOCKER_TAG: latest
+      FINGER_PRINT: 2a:a7:e8:85:3c:0b:79:5d:c1:45:94:2e:2a:c0:bd:8f
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check:
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+            	"blocks": [
+            		{
+            			"type": "section",
+            			"text": {
+            				"type": "mrkdwn",
+            				"text": "*Deployment failure* :x:\n"
+            			}
+            		},
+            		{
+            			"type": "section",
+            			"text": {
+            				"type": "mrkdwn",
+            				"text": "*Project CI:* <https://app.circleci.com/pipelines/github/huynxtb/AppJobs|app-jobs-cicd> \n*Build number:* $CIRCLE_PREVIOUS_BUILD_NUM $CIRCLE_BUILD_NUM\n*Repo:* <https://github.com/huynxtb/AppJobs|app-jobs-github>\n*Branch:* $CIRCLE_BRANCH\n*Commit ID:* $CIRCLE_SHA1\n*Workflow:* ci-cd pipeline\n*Production Site:* <https://app-jobs.devswim-apps.com|app-jobs.devswim-apps.com>\n*Testing Site:* <https://app-jobs.devswim-apps.com|app-jobs.devswim-apps.com>\n\n*Jobs:* \n- build-and-push :white_check_mark: \n- deploy :warning:\n\n*Contact:* \n- Facebook: <https://www.facebook.com/huynx11.dev|Nguyen Xuan Huy>\n- Zalo: 0399059205\n- Website: <https://www.devswim.com|www.devswim.com>"
+            			},
+            			"accessory": {
+            				"type": "image",
+            				"image_url": "https://github.com/devswim/CommonImages/blob/main/error-png.png?raw=true",
+            				"alt_text": "thumbnail"
+            			}
+            		}
+            	]
+            }
+  deploy:
+    executor: docker/docker
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - $FINGER_PRINT
+      - run: ssh -oStrictHostKeyChecking=no -v root@198.252.107.14 './deploy/devswimapps/appjobs/deploy.sh' # IpServer + DeployFolder
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+            	"blocks": [
+            		{
+            			"type": "section",
+            			"text": {
+            				"type": "mrkdwn",
+            				"text": "*Deployment failure* :x:\n"
+            			}
+            		},
+            		{
+            			"type": "section",
+            			"text": {
+            				"type": "mrkdwn",
+            				"text": "*Project CI:* <https://app.circleci.com/pipelines/github/huynxtb/AppJobs|app-jobs-cicd> \n*Build number:* $CIRCLE_PREVIOUS_BUILD_NUM $CIRCLE_BUILD_NUM\n*Repo:* <https://github.com/huynxtb/AppJobs|app-jobs-github>\n*Branch:* $CIRCLE_BRANCH\n*Commit ID:* $CIRCLE_SHA1\n*Workflow:* ci-cd pipeline\n*Production Site:* <https://app-jobs.devswim-apps.com|app-jobs.devswim-apps.com>\n*Testing Site:* <https://app-jobs.devswim-apps.com|app-jobs.devswim-apps.com>\n\n*Jobs:* \n- build-and-push :white_check_mark: \n- deploy :x:\n\n*Contact:* \n- Facebook: <https://www.facebook.com/huynx11.dev|Nguyen Xuan Huy>\n- Zalo: 0399059205\n- Website: <https://www.devswim.com|www.devswim.com>"
+            			},
+            			"accessory": {
+            				"type": "image",
+            				"image_url": "https://github.com/devswim/CommonImages/blob/main/error-png.png?raw=true",
+            				"alt_text": "thumbnail"
+            			}
+            		}
+            	]
+            }
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+            	"blocks": [
+            		{
+            			"type": "section",
+            			"text": {
+            				"type": "mrkdwn",
+            				"text": "*Deployment successfully* :white_check_mark:\n"
+            			}
+            		},
+            		{
+            			"type": "section",
+            			"text": {
+            				"type": "mrkdwn",
+            				"text": "*Project CI:* <https://app.circleci.com/pipelines/github/huynxtb/AppJobs|app-jobs-cicd> \n*Build number:* $CIRCLE_PREVIOUS_BUILD_NUM $CIRCLE_BUILD_NUM\n*Repo:* <https://github.com/huynxtb/AppJobs|app-jobs-github>\n*Branch:* $CIRCLE_BRANCH\n*Commit ID:* $CIRCLE_SHA1\n*Workflow:* ci-cd pipeline\n*Production Site:* <https://app-jobs.devswim-apps.com|app-jobs.devswim-apps.com>\n*Testing Site:* <https://app-jobs.devswim-apps.com|app-jobs.devswim-apps.com>\n\n*Jobs:* \n- build-and-push :white_check_mark: \n- deploy :white_check_mark:\n\n*Contact:* \n- Facebook: <https://www.facebook.com/huynx11.dev|Nguyen Xuan Huy>\n- Zalo: 0399059205\n- Website: <https://www.devswim.com|www.devswim.com>"
+            			},
+            			"accessory": {
+            				"type": "image",
+            				"image_url": "https://github.com/devswim/CommonImages/blob/main/sucessfully-png.png?raw=true",
+            				"alt_text": "thumbnail"
+            			}
+            		}
+            	]
+            }
+workflows:
+  cicd-pipeline:
+    jobs:
+      - build-and-push:
+          filters:
+            branches:
+              only:
+                - master
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build-and-push
