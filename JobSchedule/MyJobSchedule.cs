@@ -116,7 +116,8 @@ namespace MyJobsApp.JobSchedule
                         cus.Website.Replace("https://www.", string.Empty), //24
                         "https://www.hawkhost.com/", //25
                         "HawkHost", //26
-                        OwnerInfo.BankOwnerName); //27
+                        OwnerInfo.BankOwnerName,//27
+                        cus.BackupType); //28
 
                 await _commonService.SendSingleMail(new EmailMessageViewModel()
                 {
