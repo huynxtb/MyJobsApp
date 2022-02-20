@@ -5,6 +5,7 @@ using MyJobsApp.JobSchedule;
 
 namespace MyJobsApp.Controllers
 {
+    [Route("job")]
     public class JobController : BaseController
     {
         private readonly IMyJobSchedule _myJobSchedule;
@@ -29,7 +30,7 @@ namespace MyJobsApp.Controllers
             }
         }
         
-        [Route("mail/monthly-payment-web-server")]
+        [Route("send-mail/monthly-payment-web-server")]
         public async Task<IActionResult> SendMailPaymentServer20ThOfEveryMonth()
         {
             try
