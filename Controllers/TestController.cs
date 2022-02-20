@@ -5,12 +5,14 @@ namespace MyJobsApp.Controllers
     [Route("test")]
     public class TestController : Controller
     {
+        [HttpGet]
         [Route("400")]
         public IActionResult Test400()
         {
             return BadRequest("test 400");
         }
         
+        [HttpPost]
         [Route("401")]
         public IActionResult Test401()
         {
