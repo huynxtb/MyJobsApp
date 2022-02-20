@@ -36,5 +36,11 @@ namespace MyJobsApp.Controllers
         {
             return StatusCode(500);
         }
+        
+        [Route("200")]
+        public IActionResult Test200()
+        {
+            return StatusCode(200);
+        }
     }
 }
