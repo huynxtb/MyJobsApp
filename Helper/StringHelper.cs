@@ -1,7 +1,4 @@
 ﻿using System;
-using MyJobsApp.Constants;
-using MyJobsApp.Models;
-using PasswordGenerator;
 
 namespace MyJobsApp.Helper
 {
@@ -10,19 +7,14 @@ namespace MyJobsApp.Helper
         public static string UniqueSqlBackupFileName()
         {
             var currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneHelper.TimeZoneGMT7());
-            
-            var pwd = new Password()
-                .IncludeLowercase()
-                .IncludeNumeric()
-                .LengthRequired(4);
-            var randomStr = pwd.Next();
+
+            var randomStr = Guid.NewGuid().ToString().Split("-")[0];;
             
             var nameDate = currentTime.ToString()
                 .Replace("/", "-")
-                .Replace(" ", "_")
-                .Replace(":", "-");
+                .Replace(":", ".");
             
-            return $"{nameDate}__{randomStr}__Backup.sql";
+            return $"{nameDate} Backup-{randomStr}.sql";
         }
     }
 }
