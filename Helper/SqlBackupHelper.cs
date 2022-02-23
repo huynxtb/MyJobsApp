@@ -12,7 +12,7 @@ namespace MyJobsApp.Helper
         public static string SaveFileBackUpToServer(string path, string connectionString, string databaseName)
         {
             var schemaName = "dbo";
-            var fileName = databaseName + "_" + StringHelper.UniqueSqlBackupFileName();
+            var fileName = StringHelper.UniqueSqlBackupFileName(databaseName);
             var fileNamePath = path + fileName;
 
             if (File.Exists(fileNamePath))
