@@ -13,7 +13,7 @@
         public static string BankOwnerName = "NGUYEN XUAN HUY";
         public static string PhoneNumber = "0399059205";
         public static string EmailAddress = "huynx11.dev@gmail.com";
-        public static string Website = "https://devswim.com";
-        public static string Signature = "Devswim";
+        public static string Website = "https://code-mega.com";
+        public static string Signature = "Code Mega";
     }
 }
