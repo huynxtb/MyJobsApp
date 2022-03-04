@@ -7,7 +7,7 @@ using SMO = Microsoft.SqlServer.Management.Smo;
 
 namespace MyJobsApp.Helper
 {
-    public class SqlBackupHelper
+    public static class SqlBackupHelper
     {
         public static string SaveFileBackUpToServer(string path, string connectionString, string databaseName)
         {
